@@ -12,7 +12,7 @@ import com.cfw.wol.ui.MainScreen
 import com.cfw.wol.ui.theme.WOLTheme
 
 class MainActivity : ComponentActivity() {
-    private lateinit val deviceManager: DeviceManager
+    private lateinit var deviceManager: DeviceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

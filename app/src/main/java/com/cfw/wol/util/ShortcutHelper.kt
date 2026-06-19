@@ -5,13 +5,13 @@ import android.content.Intent
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import com.cfw.wol.WakeReceiver
+import com.cfw.wol.WakeActivity
 import com.cfw.wol.data.Device
 
 object ShortcutHelper {
     fun createShortcut(context: Context, device: Device) {
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-            val intent = Intent(context, WakeReceiver::class.java).apply {
+            val intent = Intent(context, WakeActivity::class.java).apply {
                 action = "com.cfw.wol.ACTION_WAKE_DEVICE"
                 putExtra("EXTRA_MAC", device.mac)
                 putExtra("EXTRA_PORT", device.port)

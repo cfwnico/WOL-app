@@ -23,10 +23,11 @@ object WolSender {
             
             val address = InetAddress.getByName("255.255.255.255")
             val packet = DatagramPacket(bytes, bytes.size, address, port)
-            val socket = DatagramSocket()
-            socket.broadcast = true
-            socket.send(packet)
-            socket.close()
+            
+            DatagramSocket().use { socket ->
+                socket.broadcast = true
+                socket.send(packet)
+            }
             true
         } catch (e: Exception) {
             e.printStackTrace()

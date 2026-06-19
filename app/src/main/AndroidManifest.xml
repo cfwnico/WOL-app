@@ -24,7 +24,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".WakeReceiver" android:exported="false" />
+        <activity
+            android:name=".WakeActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.NoDisplay" />
     </application>
 
 </manifest>

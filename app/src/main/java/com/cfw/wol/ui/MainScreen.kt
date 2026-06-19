@@ -34,6 +34,7 @@ fun MainScreen(deviceManager: DeviceManager) {
     val coroutineScope = rememberCoroutineScope()
     var showDialog by remember { mutableStateOf(false) }
     var editingDevice by remember { mutableStateOf<Device?>(null) }
+    var shortcutDevice by remember { mutableStateOf<Device?>(null) }
 
     Scaffold(
         topBar = {
@@ -101,8 +102,7 @@ fun MainScreen(deviceManager: DeviceManager) {
                         },
                         onDelete = { deviceManager.removeDevice(device) },
                         onCreateShortcut = {
-                            ShortcutHelper.createShortcut(context, device)
-                            Toast.makeText(context, "已尝试创建快捷方式", Toast.LENGTH_SHORT).show()
+                            shortcutDevice = device
                         }
                     )
                 }
@@ -117,6 +117,18 @@ fun MainScreen(deviceManager: DeviceManager) {
             onSave = { device ->
                 deviceManager.addOrUpdateDevice(device)
                 showDialog = false
+            }
+        )
+    }
+
+    shortcutDevice?.let { device ->
+        ShortcutNameDialog(
+            device = device,
+            onDismiss = { shortcutDevice = null },
+            onConfirm = { customName ->
+                ShortcutHelper.createShortcut(context, device, customName)
+                Toast.makeText(context, "已尝试创建快捷方式: $customName", Toast.LENGTH_SHORT).show()
+                shortcutDevice = null
             }
         )
     }
@@ -272,6 +284,44 @@ fun DeviceDialog(
                 }
             ) {
                 Text("保存")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("取消")
+            }
+    )
+}
+
+@Composable
+fun ShortcutNameDialog(
+    device: Device,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var name by remember { mutableStateOf(device.name) }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("创建快捷方式") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("快捷方式名称") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (name.isNotBlank()) {
+                        onConfirm(name.trim())
+                    }
+                }
+            ) {
+                Text("确定")
             }
         },
         dismissButton = {

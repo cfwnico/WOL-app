@@ -290,6 +290,7 @@ fun DeviceDialog(
             TextButton(onClick = onDismiss) {
                 Text("取消")
             }
+        }
     )
 }
 
